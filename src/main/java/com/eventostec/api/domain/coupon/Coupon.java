@@ -10,7 +10,7 @@ import lombok.Setter;
 import java.util.Date;
 import java.util.UUID;
 
-@Table(name = "event-coupon")
+@Table(name = "coupon")
 @Entity
 @Getter
 @Setter

@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,7 +44,7 @@ public class EventController {
         return ResponseEntity.ok(newEvent);
     }
 
-    @GetMapping("/{èventId}")
+    @GetMapping("/{eventId}")
     public ResponseEntity<EventDetailsDTO> getEventDetails(@PathVariable UUID eventId) {
         EventDetailsDTO eventDetails = eventService.getEventDetails(eventId);
         return ResponseEntity.ok(eventDetails);

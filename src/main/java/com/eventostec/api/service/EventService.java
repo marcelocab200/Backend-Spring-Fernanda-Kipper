@@ -25,7 +25,10 @@ import com.eventostec.api.domain.event.EventRequestDTO;
 import com.eventostec.api.domain.event.EventResponseDTO;
 import com.eventostec.api.repositories.EventRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class EventService {
 
     @Value("${aws.bucket.name}")
@@ -44,10 +47,10 @@ public class EventService {
     private AddressService addressService;
 
     public Event createEvent(EventRequestDTO data) {
-        String imgUrl = null;
+        String imgUrl = "";
 
         if (data.image() != null) {
-            this.uploadImg(data.image());
+            imgUrl = this.uploadImg(data.image());
         }
 
         Event newEvent = new Event();
@@ -114,12 +117,16 @@ public class EventService {
     
         List<Coupon> coupons = couponService.consultCoupons(eventId, new Date());
     
+        log.info("coupons: " + coupons);
+
         List<EventDetailsDTO.CouponDTO> couponDTOs = coupons.stream()
                 .map(coupon -> new EventDetailsDTO.CouponDTO(
                     coupon.getCode(), 
                     coupon.getDiscount(), 
                     coupon.getValid()))
                 .collect(Collectors.toList());
+
+        log.info("couponDTOs: " + couponDTOs);
 
         return new EventDetailsDTO(
             event.getId(),
@@ -143,7 +150,7 @@ public class EventService {
             file.delete();
             return s3Client.getUrl(bucketName, filename).toString();
         } catch (Exception ex) {
-            System.out.println("Erro ao subir arquivo.");
+            System.out.println("Erro ao subir arquivo: " + ex.getMessage());
             return "";
         }
     }
